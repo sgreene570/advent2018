@@ -1,22 +1,41 @@
 import sys
 
 def checksum(data):
-    twos = 0
-    threes = 0
+    twoCount = 0
+    threeCount = 0
     for string in data:
         string = ''.join(sorted(string))
-        for x in range(0, len(string)):
-            tmp = 0
-            for y in range(x + 1, len(string)):
-                if string[x] == string[y]:
-                    tmp += 1
+        twoFound = False
+        threeFound = False
+        x = 0
+        while x < len(string):
+            char = string[x]
+            tmp = string[x:string.rfind(char) + 1]
+            size = len(tmp)
+            if size == 2 and not twoFound:
+                twoCount += 1
+                twoFound = True
+            elif size == 3 and not threeFound:
+                threeCount += 1
+                threeFound = True
 
-            if tmp == 2:
-                twos += 1
-            elif tmp == 3:
-                threes += 1
+            x += size
 
-    return twos * threes
+    return twoCount * threeCount
+
+def commonLetters(data):
+    strings = [x.strip() for x in data]
+    strings.sort()
+    size = len(strings)
+    for x in range(0, size):
+        for y in range(0, size):
+            countDiffs = 0
+            for a, b in zip(strings[x], strings[y]):
+                if a!=b:
+                    countDiffs += 1
+            if countDiffs == 1:
+                return strings[x], strings[y]
 
 if __name__ == "__main__":
-    print(checksum(sys.stdin))
+    #print(checksum(sys.stdin))
+    print(commonLetters(sys.stdin))
